@@ -6,7 +6,7 @@ import PlannedMovies from '@/components/PlannedMovies.vue';
 
 const startX = ref(0)
 const endX = ref(0)
-const swipeThreshold = 100; // Minimum swipe distance in pixels to trigger the change of movie in top 5
+const swipeThreshold = 75; // Minimum swipe distance in pixels to trigger the change of movie in top 5
 
 const movies = ref([]);
 const fetchMovies = async () => {
