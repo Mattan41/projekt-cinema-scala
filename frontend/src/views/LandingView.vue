@@ -4,6 +4,10 @@ import {computed, ref, onMounted} from 'vue';
 import ToTopButton from "@/components/ToTopButton.vue";
 import PlannedMovies from '@/components/PlannedMovies.vue';
 
+const startX = ref(0)
+const endX = ref(0)
+const swipeThreshold = 100; // Minimum swipe distance in pixels to trigger the change of movie in top 5
+
 const movies = ref([]);
 const fetchMovies = async () => {
   const response = await fetch('http://localhost:9000/movies');
@@ -65,6 +69,22 @@ function adjustIndex(index) {
   }
 }
 
+const handleTouchStart = (event) => {
+  startX.value = event.touches[0].clientX;
+}
+
+const handleTouchEnd = (event) => {
+  endX.value = event.changedTouches[0].clientX;
+  const swipeDistance = startX.value - endX.value;
+  if (Math.abs(swipeDistance) > swipeThreshold) {
+    if (swipeDistance > 0) {
+      adjustIndex('plus');
+    } else {
+      adjustIndex('minus');
+    }
+  }
+}
+
 const query = ref('');
 const isSearching = ref(false);
 const moviesContainQuery = ref();
@@ -84,6 +104,7 @@ const isShowingPlanner = ref(false);
 function showMoviePlanner(){
 isShowingPlanner.value = !isShowingPlanner.value;
 }
+
 </script>
 
 <template>
@@ -118,17 +139,20 @@ isShowingPlanner.value = !isShowingPlanner.value;
         <div class="w-full">
           <h3 class="ml-3 mt-16 text-left sm:pb-2 md:pb-2">Top 5</h3>
         </div>
-        <div class="flex justify-center p-3 gap-5">
-          <router-link v-if="arrayOfHighestRated[topFirstIndex]?.id" :to="{ name: 'movieProfile', params: { id: arrayOfHighestRated[topFirstIndex]?.id, title: arrayOfHighestRated[topFirstIndex]?.name.replace(/\s+/g, '-') } }" class="rounded-md bg-slate-200 shadow-[0px_0px_8px_6px_rgba(255,255,255,0.6)]">
-            <img class="object-cover" :src="`https://image.tmdb.org/t/p/w500${arrayOfHighestRated[topFirstIndex]?.imageUrl}`" alt="">
-          </router-link>
-          <router-link v-if="arrayOfHighestRated[topSecondIndex]?.id"
-            :to="{ name: 'movieProfile', params: { id: arrayOfHighestRated[topSecondIndex]?.id, title: arrayOfHighestRated[topSecondIndex]?.name.replace(/\s+/g, '-') } }"
-            class="rounded-md bg-slate-200 shadow-[0px_0px_8px_6px_rgba(255,255,255,0.6)]">
-            <img class="object-cover"
-              :src="`https://image.tmdb.org/t/p/w500${arrayOfHighestRated[topSecondIndex]?.imageUrl}`" alt="">
-          </router-link>
-        </div>
+          <transition-group name="swipe" tag="div" class="flex justify-center p-3 gap-5" @touchstart="handleTouchStart" @touchend="handleTouchEnd">
+            <router-link v-if="arrayOfHighestRated[topFirstIndex]?.id"
+                         :to="{ name: 'movieProfile', params: { id: arrayOfHighestRated[topFirstIndex]?.id, title: arrayOfHighestRated[topFirstIndex]?.name.replace(/\s+/g, '-') } }"
+                         class="rounded-md bg-slate-200 shadow-[0px_0px_8px_6px_rgba(255,255,255,0.6)]">
+              <img class="object-cover"
+                   :src="`https://image.tmdb.org/t/p/w500${arrayOfHighestRated[topFirstIndex]?.imageUrl}`" alt="">
+            </router-link>
+            <router-link v-if="arrayOfHighestRated[topSecondIndex]?.id"
+                         :to="{ name: 'movieProfile', params: { id: arrayOfHighestRated[topSecondIndex]?.id, title: arrayOfHighestRated[topSecondIndex]?.name.replace(/\s+/g, '-') } }"
+                         class="rounded-md bg-slate-200 shadow-[0px_0px_8px_6px_rgba(255,255,255,0.6)]">
+              <img class="object-cover"
+                   :src="`https://image.tmdb.org/t/p/w500${arrayOfHighestRated[topSecondIndex]?.imageUrl}`" alt="">
+            </router-link>
+          </transition-group>
         </div>
         <nav>
           <button @click="adjustIndex('minus')"><span
@@ -202,4 +226,31 @@ isShowingPlanner.value = !isShowingPlanner.value;
 .move-up {
   transition: transform 0.5s ease;
 }
+
+.swipe-right {
+  animation: swipeRight 0.5s forwards;
+}
+
+@keyframes swipeRight {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.swipe-left {
+  animation: swipeLeft 0.5s forwards;
+}
+
+@keyframes swipeLeft {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
 </style>
