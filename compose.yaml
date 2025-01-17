@@ -18,15 +18,17 @@ services:
       - mongodb
     networks:
       - mynetwork
+    restart: unless-stopped
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "5174:80"
+      - "5174:5174"
     networks:
       - mynetwork
+    restart: unless-stopped
 
   mongodb:
     image: 'mongo:latest'
@@ -41,6 +43,8 @@ services:
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
     networks:
       - mynetwork
+    restart: unless-stopped
+
 volumes:
     dbData:
 

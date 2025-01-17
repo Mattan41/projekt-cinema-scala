@@ -1,4 +1,4 @@
-FROM node:18-alpine AS build-stage
+FROM node:23-alpine AS build-stage
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
@@ -7,5 +7,5 @@ RUN npm run build
 
 FROM nginx:stable-alpine AS production-stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
-EXPOSE 80
+EXPOSE 5174
 CMD ["nginx", "-g", "daemon off;"]
