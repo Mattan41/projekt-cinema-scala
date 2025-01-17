@@ -1,9 +1,49 @@
 services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+     DATABASE_URL: ${DATABASE_URL}
+     ID: ${ID}
+     SECRET: ${SECRET}
+     ACCESS_TOKEN: ${ACCESS_TOKEN}
+    ports:
+      - "9000:9000"
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
+    networks:
+      - mynetwork
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5174:80"
+    networks:
+      - mynetwork
+
   mongodb:
     image: 'mongo:latest'
     environment:
-      - 'MONGO_INITDB_DATABASE=mydatabase'
-      - 'MONGO_INITDB_ROOT_PASSWORD=secret'
-      - 'MONGO_INITDB_ROOT_USERNAME=root'
+    - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+    - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
     ports:
-      - '27017'
+      - '27017:27017'
+    volumes:
+      - dbData:/data/db
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    networks:
+      - mynetwork
+volumes:
+    dbData:
+
+networks:
+  mynetwork:
+    driver: bridge
