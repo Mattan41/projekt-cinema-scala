@@ -1,7 +1,5 @@
 # .dockerignore
 target
-pom.xml
-src
 .DS_Store
 .git
 .gitignore
