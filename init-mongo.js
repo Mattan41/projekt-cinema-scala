@@ -1,13 +1,7 @@
-db = db.getSiblingDB('admin');
 db.createUser({
-    user: "root",
-    pwd: "secret",
-    roles: [{ role: "root", db: "admin" }]
+    user: process.env.MONGO_INITDB_ROOT_USERNAME,
+    pwd: process.env.MONGO_INITDB_ROOT_PASSWORD,
+    roles: [{ role: "readWrite", db: process.env.MONGO_INITDB_DATABASE }]
 });
 
-db = db.getSiblingDB('mydatabase');
-db.createUser({
-    user: "root",
-    pwd: "secret",
-    roles: [{ role: "readWrite", db: "mydatabase" }]
-});
+db.createCollection("mycollection");

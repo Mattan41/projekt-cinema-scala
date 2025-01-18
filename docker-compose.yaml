@@ -1,0 +1,49 @@
+services:
+  backend:
+    image: mattan41/backendcinemascala:latest
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      ID: ${ID}
+      SECRET: ${SECRET}
+      ACCESS_TOKEN: ${ACCESS_TOKEN}
+    ports:
+      - "9000:9000"
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
+    networks:
+      - mynetwork
+    restart: unless-stopped
+
+  frontend:
+    image: mattan41/frontendcinemascala:latest
+    ports:
+      - "5174:80"
+    networks:
+      - mynetwork
+    restart: unless-stopped
+
+  mongodb:
+    image: 'mongo:latest'
+    environment:
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+    ports:
+      - '27017:27017'
+    volumes:
+      - dbData:/data/db
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    networks:
+      - mynetwork
+    restart: unless-stopped
+
+volumes:
+  dbData:
+
+networks:
+  mynetwork:
+    driver: bridge
