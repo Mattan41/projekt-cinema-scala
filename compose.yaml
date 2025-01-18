@@ -25,7 +25,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "5174:5174"
+      - "5174:80"
     networks:
       - mynetwork
     restart: unless-stopped

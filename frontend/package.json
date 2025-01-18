@@ -7,6 +7,7 @@
     "dev": "vitest run && vite",
     "build": "vite build",
     "preview": "vite preview",
+    "serve": "vite preview --port 80",
     "test:unit": "vitest",
     "test:coverage": "vitest --coverage"
   },
