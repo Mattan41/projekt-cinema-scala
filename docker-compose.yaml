@@ -1,15 +1,13 @@
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: mattan41/backendcinemascala:latest
     env_file:
       - .env
     environment:
-     DATABASE_URL: ${DATABASE_URL}
-     ID: ${ID}
-     SECRET: ${SECRET}
-     ACCESS_TOKEN: ${ACCESS_TOKEN}
+      DATABASE_URL: ${DATABASE_URL}
+      ID: ${ID}
+      SECRET: ${SECRET}
+      ACCESS_TOKEN: ${ACCESS_TOKEN}
     ports:
       - "9000:9000"
     depends_on:
@@ -21,9 +19,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: mattan41/frontendcinemascala:latest
     ports:
       - "5174:80"
     networks:
@@ -33,9 +29,9 @@ services:
   mongodb:
     image: 'mongo:latest'
     environment:
-    - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
-    - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
-    - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
     ports:
       - '27017:27017'
     volumes:
@@ -46,7 +42,7 @@ services:
     restart: unless-stopped
 
 volumes:
-    dbData:
+  dbData:
 
 networks:
   mynetwork:
