@@ -1,5 +1,4 @@
 # .dockerignore
-target
 .DS_Store
 .git
 .gitignore
