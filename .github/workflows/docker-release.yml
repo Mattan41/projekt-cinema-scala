@@ -30,7 +30,7 @@ jobs:
         run: |
           docker build --target build -t backend-build -f backend/Dockerfile ./backend
           docker create --name backend-build-container backend-build
-          docker cp backend-build-container:/app/target/*.jar ./backend/app.jar || true
+          docker cp backend-build-container:/target/*.jar ./backend/app.jar || true
           docker rm backend-build-container
 
       - name: Set up QEMU
