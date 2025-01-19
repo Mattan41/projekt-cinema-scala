@@ -25,10 +25,6 @@ jobs:
           --health-interval 10s 
           --health-timeout 5s 
           --health-retries 5
-        env:
-          MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
-          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
-          MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
 
     steps:
       - name: Checkout
@@ -40,9 +36,6 @@ jobs:
           java-version: '23'
           distribution: 'temurin'
           cache: 'maven'
-
-      - name: Copy init-mongo-db.js to MongoDB container
-        run: docker cp ./init-mongo-db.js mongodb:/docker-entrypoint-initdb.d/init-mongo-db.js
 
       - name: Compile and test backend with Maven
         run: mvn -B package --file backend/pom.xml
