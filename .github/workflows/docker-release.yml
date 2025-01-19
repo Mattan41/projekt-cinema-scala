@@ -33,6 +33,9 @@ jobs:
           docker cp backend-build-container:/app/target/*.jar ./backend/app.jar
           docker rm backend-build-container
 
+      - name: List files in /app/target
+        run: docker run --rm backend-build ls -l /app/target
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
