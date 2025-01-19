@@ -41,6 +41,9 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
+      - name: Copy init-mongo-db.js to MongoDB container
+        run: docker cp ./init-mongo-db.js mongodb:/docker-entrypoint-initdb.d/init-mongo-db.js
+
       - name: Compile and test backend with Maven
         run: mvn -B package --file backend/pom.xml
 
@@ -59,9 +62,6 @@ jobs:
           registry: docker.io
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
-      - name: Copy init-mongo-db.js to MongoDB container
-        run: docker cp ./init-mongo-db.js mongodb:/docker-entrypoint-initdb.d/init-mongo-db.js
 
       - name: Build and push backend image
         uses: docker/build-push-action@v5
