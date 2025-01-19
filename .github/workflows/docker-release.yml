@@ -26,8 +26,12 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Compile with Maven
-        run: mvn -B package -DskeipTests --file backend/pom.xml
+      - name: Build backend application
+        run: |
+          docker build --target build -t backend-build -f backend/Dockerfile ./backend
+          docker create --name backend-build-container backend-build
+          docker cp backend-build-container:/app/target/*.jar ./backend/app.jar
+          docker rm backend-build-container
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
