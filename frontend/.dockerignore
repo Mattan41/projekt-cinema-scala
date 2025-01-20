@@ -3,3 +3,4 @@ node_modules
 dist
 .git
 .DS_Store
+.github/workflows/docker-release.yml
