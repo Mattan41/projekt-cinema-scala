@@ -16,6 +16,6 @@ export default defineConfig({
   server: {
     port: 5174,
     host: true,
-    allowedHosts: 'all',
+    allowedHosts: ['cinemascala.kruskopf.org'],
   }
 })
