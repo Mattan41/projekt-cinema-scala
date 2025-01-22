@@ -17,6 +17,7 @@ export default defineConfig({
     port: 5174,
     host: true,
     allowedHosts: ['cinemascala.kruskopf.org'],
+
   //   proxy: {
   //     '/api': {
   //       target: 'http://localhost:9000',
